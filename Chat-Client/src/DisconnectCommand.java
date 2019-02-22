@@ -5,7 +5,7 @@ public class DisconnectCommand extends NetworkListenerAdapter{
    public void process(String message, IClient client) {
       //message should be DISCONNECT
       if(isCommand(message, COMMAND)){
-         client.append("Good bye!\r\n");
+         client.append("ADMIN: Good bye!\r\n");
          client.stop();
       }
    }

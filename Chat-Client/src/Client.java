@@ -1,5 +1,3 @@
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.io.*;
 import java.net.*;
@@ -10,8 +8,10 @@ public class Client implements IClient, Runnable {
    private BufferedReader in; //Server to client input stream
    private PrintWriter out; //Client to server input stream
    private boolean running;
+   private GUI gui;
 
-   public Client(String IP, int port) throws UnknownHostException, IOException{
+   public Client(String IP, int port, GUI gui) throws UnknownHostException, IOException{
+      this.gui = gui;
       listeners = new ArrayList<INetworkListener>();
       socket = new Socket(IP, port);
       in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -22,6 +22,8 @@ public class Client implements IClient, Runnable {
       try {
          while (running) {
             process(in.readLine());
+            if(gui.pressed)
+               send(gui.isPushed());
          }
       }catch(Exception e){System.out.println("Caught error: " + e);}
    }
@@ -40,6 +42,10 @@ public class Client implements IClient, Runnable {
       running = false;
    }
    public void append(String str){
-
+      String[] strings = str.split(" ");
+      if(strings[0].equals("LIST"))
+         gui.addUser(strings[1]);
+      else
+         gui.print(str);
    }
 }

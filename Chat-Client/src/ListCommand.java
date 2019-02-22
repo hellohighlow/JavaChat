@@ -25,7 +25,7 @@ public class ListCommand extends NetworkListenerAdapter {
             str[2] = tmp[1].substring(start);
          }
          for(String s1 : users)
-            client.append("user "+s1);
+            client.append("LIST "+s1);
       }
    }
 }

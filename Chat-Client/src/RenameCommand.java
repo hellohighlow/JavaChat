@@ -11,6 +11,7 @@ public class RenameCommand extends NetworkListenerAdapter{
          String s1 = s[2].substring(start);
          s = s1.split(" ", 2);
          client.append(s + "!\r\n");
+         client.send("LIST");
 
       }
    }
