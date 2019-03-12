@@ -28,4 +28,9 @@ public class ListCommand extends NetworkListenerAdapter {
             client.append("LIST "+s1);
       }
    }
+   public void send(String message, IClient client) {
+      if(isCommand(message,COMMAND)){
+         ((Client) client).out.println(message);
+      }
+   }
 }

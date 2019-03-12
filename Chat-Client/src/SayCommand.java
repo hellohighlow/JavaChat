@@ -12,4 +12,5 @@ public class SayCommand extends NetworkListenerAdapter {
          client.append(msg[2].substring(0,namLen)+ ": " + msg[2].substring(namLen) + "\r\n");
       }
    }
+
 }

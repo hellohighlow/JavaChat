@@ -6,12 +6,14 @@ public class Client implements IClient, Runnable {
    private ArrayList<INetworkListener> listeners; //List of INetworkListeners
    private Socket socket; //Socket to connect to
    private BufferedReader in; //Server to client input stream
-   private PrintWriter out; //Client to server input stream
+   public PrintWriter out; //Client to server input stream
    private boolean running;
    private GUI gui;
+   public String handle;
 
    public Client(String IP, int port, GUI gui) throws UnknownHostException, IOException{
       this.gui = gui;
+      handle = "Anon"+1;
       listeners = new ArrayList<INetworkListener>();
       socket = new Socket(IP, port);
       in = new BufferedReader(new InputStreamReader(socket.getInputStream()));

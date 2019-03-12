@@ -9,4 +9,10 @@ public class DisconnectCommand extends NetworkListenerAdapter{
          client.stop();
       }
    }
+   //Should be DISCONNECT
+   public void send(String message, IClient client) {
+      if(isCommand(message,COMMAND)){
+         ((Client)client).out.println(message + ((Client)client).handle);
+      }
+   }
 }
