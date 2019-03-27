@@ -10,7 +10,11 @@ public class Server implements IServer, Runnable{
    private int ID;
 
    public IClient[] getClients() {
-      return (IClient[])serverSideClients.toArray();
+      IClient[] clients = new IClient[serverSideClients.size()];
+      for(int i = 0; i < serverSideClients.size(); i++){
+         clients[i] = serverSideClients.get(i);
+      }
+      return clients;
    }
    public void broadcast(String data) {
       for(int i = 0; i < serverSideClients.size(); i++)
@@ -25,26 +29,27 @@ public class Server implements IServer, Runnable{
       try{
          while(running){
             gui.append("Accepting Clients");
-
             Socket clientSocket = listener.accept();
             ServerSideClient NewClient = new ServerSideClient(nextID(), this, clientSocket, gui);
             serverSideClients.add(NewClient);
             broadcast("ADD " + NewClient.getHandle());
             Thread client = new Thread(NewClient);
             client.start();
-            gui.append("Client " + NewClient.getHandle() + " Connected");
+            gui.append("Client " + NewClient.getHandle() + " connected");
          }
-      }catch(Exception e ){System.out.println("ERR: " + e.getStackTrace());}
+      }catch(Exception e ){System.out.println("Server run | ERR: " + e.getStackTrace()[1].getLineNumber());}
    }
+
+   public void append(String str){gui.append(str);}
    public void stop() {running = false;}
-   public Server(GUI gui, int port){
+   public Server(int port){
       try {
-         this.gui = gui;
+         gui = new GUI(this);
          ID = 1;
          running = true;
          serverSideClients = new ArrayList<IClient>();
          listener = new ServerSocket(port);
-      }catch(Exception e){System.out.println("ERR: " + e.getStackTrace());}
+      }catch(Exception e){System.out.println("Server constr | ERR: " + e.getStackTrace());}
 
    }
    public int nextID(){

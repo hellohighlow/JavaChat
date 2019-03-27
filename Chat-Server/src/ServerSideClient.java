@@ -10,10 +10,14 @@ public class ServerSideClient implements IClient, Runnable{
    private IServer server;
    private boolean running;
    private BufferedReader in;
-   private PrintWriter out;
+   public PrintWriter out;
+   private Socket clientSocket;
+   private GUI gui;
 
-   public ServerSideClient(int ID, IServer server, Socket clientSocket, GUI gui){
+   public ServerSideClient(int ID, IServer server, Socket socket, GUI gui){
       UID = ID;
+      this.gui = gui;
+      clientSocket = socket;
       listeners = new ArrayList<INetworkListener>();
       handle = "anon"+UID;
       this.server = server;
@@ -21,7 +25,8 @@ public class ServerSideClient implements IClient, Runnable{
       try {
          in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
          out = new PrintWriter(clientSocket.getOutputStream());
-      }catch(Exception e){System.out.println("ERR: "+e);}
+         out.println("SETHANDLE " + handle);
+      }catch(Exception e){System.out.println("SSC constr | ERR: "+e.getStackTrace());}
 
       listeners.add(new AddCommand());
       listeners.add(new BadHandleCommand());
@@ -40,10 +45,10 @@ public class ServerSideClient implements IClient, Runnable{
    }
    public void run() {
       try {
-         while (running = true) {
+         while (running) {
             process(in.readLine());
          }
-      }catch(Exception e){System.out.println("ERR: " + e);}
+      }catch(Exception e){System.out.println("SSC run | ERR: " + e + " " + e.getStackTrace()[1].getLineNumber());}
    }
    public void send(String data) {
       out.println(data);
@@ -51,6 +56,7 @@ public class ServerSideClient implements IClient, Runnable{
    }
    public void stop() {
       running = false;
+      process("DISCONNECT");
    }
    public String getHandle(){
       return handle;

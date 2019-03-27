@@ -4,7 +4,7 @@ public class BadHandleCommand extends NetworkListenerAdapter{
    //Does Nothing
    public void process(String message, IClient client, IServer server) {
       if(isCommand(message, COMMAND)){
-
+         client.send("BADHANDLE");
       }
    }
 }

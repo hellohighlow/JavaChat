@@ -3,6 +3,8 @@ public class RemoveCommand extends NetworkListenerAdapter{
 
    public void process(String message, IClient client, IServer server) {
       if(isCommand(message, COMMAND)){
+         String[] split = message.split(" ", 2);
+         ((Server)server).append("Admin: " + split[1] + "has left.");
          server.broadcast(message);
       }
    }

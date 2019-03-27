@@ -13,7 +13,9 @@ public class NetworkListenerAdapter implements INetworkListener{
    }
    //is command
    public boolean isCommand(String message, String command){
-
+      String[] split = message.split(" ", 2);
+      if((split[0].toUpperCase()).equals(command))
+         return true;
       return false;
    }
 }
