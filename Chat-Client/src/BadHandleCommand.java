@@ -5,7 +5,7 @@ public class BadHandleCommand extends NetworkListenerAdapter{
    public void process(String message, IClient client) {
       //message should be BADHANDLE
       if(isCommand(message, COMMAND)){
-         client.append("Bad Handle: Something went wrong!\r\n");
+         ((Client)client).append("Bad Handle: Something went wrong!\r\n");
       }
    }
 }

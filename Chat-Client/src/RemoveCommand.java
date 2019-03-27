@@ -5,8 +5,9 @@ public class RemoveCommand extends NetworkListenerAdapter{
    public void process(String message, IClient client) {
       //message should be REMOVE Highlow
       if(isCommand(message, COMMAND)){
+         System.out.println("Debug: Process Remove");
          String[] strings = message.split(" ", 2);
-         client.append("ADMIN: " + strings[1] + " has left!\r\n");
+         ((Client)client).append("ADMIN: " + strings[1] + " has left!\r\n");
          client.send("LIST");
       }
    }

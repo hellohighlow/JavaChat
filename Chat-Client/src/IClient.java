@@ -18,5 +18,8 @@ public interface IClient
 	
 	//This makes the run method stop it's "infinite" loop
 	public  void stop();
-	public void append(String str);
+
+	public String getHandle();
+
+	public void setHandle(String handle);
 }

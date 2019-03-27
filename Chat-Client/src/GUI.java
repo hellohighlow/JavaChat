@@ -11,11 +11,11 @@ public class GUI extends JFrame{ //a simple gui for the client
    private JScrollBar scrollBar;
    private JTextArea inputField;
    private JButton button;
-   public boolean pressed;
+   private IClient client;
 
-   public GUI(){
-      //If button is pressed
-      pressed = false;
+   public GUI(IClient client){
+
+      this.client = client;
 
       setLayout(new BorderLayout());
       Container bottom = new Container();
@@ -70,11 +70,13 @@ public class GUI extends JFrame{ //a simple gui for the client
       revalidate();
    }
    //Pass text to main
-   public String isPushed(){
+   public void isPushed(){
       String send = inputField.getText();
       inputField.setText(null);
-      pressed = false;
-      return send;
+      client.send(send);
+   }
+   public void clearUsers(){
+      userList.setText("Active Users:\n\n");
    }
 }
 
@@ -82,7 +84,6 @@ class buttonHandler implements ActionListener{
    GUI gui;
    public buttonHandler(GUI gui){this.gui = gui;}
    public void actionPerformed(ActionEvent e) {
-      System.out.println("Pressed");
-      gui.pressed = true;
+      gui.isPushed();
    }
 }

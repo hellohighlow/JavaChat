@@ -9,25 +9,31 @@ public class Client implements IClient, Runnable {
    public PrintWriter out; //Client to server input stream
    private boolean running;
    private GUI gui;
-   public String handle;
+   private String handle;
 
-   public Client(String IP, int port, GUI gui) throws UnknownHostException, IOException{
-      this.gui = gui;
-      handle = "Anon"+1;
+   public Client(String IP, int port) throws IOException{
+      gui = new GUI(this);
       listeners = new ArrayList<INetworkListener>();
       socket = new Socket(IP, port);
       in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       out = new PrintWriter(socket.getOutputStream(), true);
       running = true;
+
+      listeners.add(new AddCommand());
+      listeners.add(new BadHandleCommand());
+      listeners.add(new DisconnectCommand());
+      listeners.add(new ListCommand());
+      listeners.add(new RemoveCommand());
+      listeners.add(new RenameCommand());
+      listeners.add(new SayCommand());
+      listeners.add(new SetHandleCommand());
    }
    public void run(){
       try {
          while (running) {
             process(in.readLine());
-            if(gui.pressed)
-               send(gui.isPushed());
          }
-      }catch(Exception e){System.out.println("Caught error: " + e);}
+      }catch(Exception e){System.out.println("Caught error: " + e + " " + e.getStackTrace()[1].getLineNumber());}
    }
    public void send(String message){
       for(INetworkListener i : listeners)
@@ -42,12 +48,24 @@ public class Client implements IClient, Runnable {
    }
    public void stop(){
       running = false;
+      try {
+         in.close();
+         out.close();
+         socket.close();
+      }catch(Exception e){}
    }
    public void append(String str){
       String[] strings = str.split(" ");
-      if(strings[0].equals("LIST"))
-         gui.addUser(strings[1]);
+      if(strings[0].equals("LIST")) {
+         gui.clearUsers();
+         for(int i = 1; i < strings.length; i++)
+            gui.addUser(strings[i]);
+      }
       else
          gui.print(str);
    }
+   public String getHandle(){
+      return handle;
+   }
+   public void setHandle(String handle){this.handle = handle;}
 }
